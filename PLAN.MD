@@ -11,7 +11,7 @@
 
 ## Step 3 - Code Setup (15 min)
 - Create a service with three methods
-  - `countIntersections`
+  - `getIntersections`
   - `isContained`
   - `isAdjacent`
 - Create a test file for the service
