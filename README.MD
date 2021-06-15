@@ -47,6 +47,10 @@ Please document any library or framework dependencies.
   - This may be incorrect from reading the "Intersection" description, but it is the assumption I am going with. If only one line of rectangle A is intersecting with one line of rectangle B, that means they have some sort of adjacency. 
   - Might need to add a priority of classifications.
 
+## Code Sources
+I used a starter project to speed up development. This has typescript and jest support pre-configured. Initial starter project was from this repo: https://github.com/stemmlerjs/simple-typescript-starter
+
+
 ## Steps to Run
 
 
