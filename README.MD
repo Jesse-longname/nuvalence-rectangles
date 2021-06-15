@@ -29,7 +29,7 @@ Your submitted source code must compile (if necessary) and the resulting executa
 Please document any library or framework dependencies.
 
 ## Assumptions
-- The input to the service will be a list of Rectangles (as opposed to a list of Lines)
+- The input to the service will be a pair of Rectangles (as opposed to a pair of lists of Lines)
   - This means we will not have to determine where a rectangle is by figuring out the intersection of lines.
   - In the future, this extra functionality could be added on as a "pre-processor".
 - We will be defining points using whole numbers. 
@@ -46,6 +46,8 @@ Please document any library or framework dependencies.
 - A pair of rectangles can only fall in 1 of the three categories
   - This may be incorrect from reading the "Intersection" description, but it is the assumption I am going with. If only one line of rectangle A is intersecting with one line of rectangle B, that means they have some sort of adjacency. 
   - Might need to add a priority of classifications.
+- Shared edges will not count as an intersection
+  - Otherwise, there are infinite intersection points
 
 ## Code Sources
 I used a starter project to speed up development. This has typescript and jest support pre-configured. Initial starter project was from this repo: https://github.com/stemmlerjs/simple-typescript-starter

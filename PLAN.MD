@@ -10,11 +10,10 @@
 - Describe how these assumptions will impact the final code
 
 ## Step 3 - Code Setup (15 min)
-- Create a service with three or four methods
+- Create a service with three methods
   - `countIntersections`
-  - `countContainment`
-  - `countAdjacency`
-  - `countAll` (convenience method)
+  - `isContained`
+  - `isAdjacent`
 - Create a test file for the service
 - Define some commands in a package.json that will aid in running and testing the service
 
