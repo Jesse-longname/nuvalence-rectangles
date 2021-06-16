@@ -1,9 +1,9 @@
-import { Line, Rectangle } from './rectangle';
+import { RectangleCompaerer } from './rectangle';
 import { RectangleService } from './rectangle.service';
 import { testCases } from './rectangle.testcases';
 
 describe('Rectangle Service Tests', () => {
-  const rectangleService = new RectangleService();
+  const rectangleService: RectangleCompaerer = new RectangleService();
 
   it('should be initialized', () => {
     expect(rectangleService).toBeDefined();
@@ -29,6 +29,12 @@ describe('Rectangle Service Tests', () => {
             rectangleService.getIntersections(
               testCase.rectangleA,
               testCase.rectangleB,
+            ),
+          ).toEqual(testCase.intersections);
+          expect(
+            rectangleService.getIntersections(
+              testCase.rectangleB,
+              testCase.rectangleA,
             ),
           ).toEqual(testCase.intersections);
         });
