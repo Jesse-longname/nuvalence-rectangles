@@ -82,11 +82,7 @@ export class RectangleService implements RectangleComparer {
     return rect.x1 === rect.x2 || rect.y1 === rect.y2;
   }
 
-  private isBetweenInclusive(
-    toCheck: number,
-    lowerEndpoint: number,
-    higherEndpoint: number,
-  ): boolean {
+  private isBetweenInclusive(toCheck: number, lowerEndpoint: number, higherEndpoint: number): boolean {
     return toCheck >= lowerEndpoint && toCheck <= higherEndpoint;
   }
 
@@ -148,9 +144,7 @@ export class RectangleService implements RectangleComparer {
     const minY = Math.min(startY, endY);
     const maxY = Math.max(startY, endY);
 
-    return (
-      this.isBetweenInclusive(point.x, minX, maxX) && this.isBetweenInclusive(point.y, minY, maxY)
-    );
+    return this.isBetweenInclusive(point.x, minX, maxX) && this.isBetweenInclusive(point.y, minY, maxY);
   }
 
   private sortPoints(points: Point[]): Point[] {
