@@ -1,3 +1,4 @@
+import { Line, Rectangle } from './rectangle';
 import { RectangleService } from './rectangle.service';
 import { testCases } from './rectangle.testcases';
 
@@ -8,12 +9,31 @@ describe('Rectangle Service Tests', () => {
     expect(rectangleService).toBeDefined();
   });
 
+  describe('createLines', () => {
+    it('should create the proper lines from a rectangle', () => {
+      const rect: Rectangle = {
+        x1: 5,
+        y1: 5,
+        x2: 15,
+        y2: 15,
+      };
+      const toTest = rectangleService.createLines(rect);
+      const expected: Line[] = [
+        { x1: 5, y1: 5, x2: 5, y2: 15 },
+        { x1: 5, y1: 5, x2: 15, y2: 5 },
+        { x1: 5, y1: 15, x2: 15, y2: 15 },
+        { x1: 15, y1: 5, x2: 15, y2: 15 },
+      ];
+      expect(toTest).toEqual(expected);
+    });
+  });
+
   describe('predefined testcases', () => {
     testCases.forEach(testCase => {
       describe(testCase.description, () => {
         if (testCase.shouldThrowError) {
           it(`should error`, () => {
-            expect(
+            expect(() =>
               rectangleService.getIntersections(
                 testCase.rectangleA,
                 testCase.rectangleB,

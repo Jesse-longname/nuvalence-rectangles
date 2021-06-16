@@ -96,7 +96,7 @@ export const testCases: TestCase[] = [
   ),
   createTestCase(
     createRectangle(10, 10, 20, 20),
-    createRectangle(10, 10, 5, 5),
+    createRectangle(10, 10, 10, 15),
     [],
     false,
     false,
@@ -126,9 +126,9 @@ export const testCases: TestCase[] = [
     createRectangle(0, 0, 20, 20),
     createRectangle(10, 10, 20, 20),
     [
-      { x: 20, y: 20 },
       { x: 10, y: 20 },
       { x: 20, y: 10 },
+      { x: 20, y: 20 },
     ],
     true,
     true,
@@ -166,8 +166,8 @@ export const testCases: TestCase[] = [
     createRectangle(0, 0, 20, 20),
     [
       { x: 0, y: 0 },
-      { x: 20, y: 0 },
       { x: 0, y: 20 },
+      { x: 20, y: 0 },
       { x: 20, y: 20 },
     ],
     true,
@@ -254,8 +254,8 @@ export const testCases: TestCase[] = [
     [
       { x: 5, y: 6 },
       { x: 5, y: 10 },
-      { x: 10, y: 6 },
-      { x: 10, y: 10 },
+      { x: 15, y: 6 },
+      { x: 15, y: 10 },
     ],
     true,
     false,
@@ -267,8 +267,8 @@ export const testCases: TestCase[] = [
     createRectangle(3, -2, 5, 15),
     [
       { x: 3, y: 0 },
-      { x: 5, y: 0 },
       { x: 3, y: 10 },
+      { x: 5, y: 0 },
       { x: 5, y: 10 },
     ],
     false,
