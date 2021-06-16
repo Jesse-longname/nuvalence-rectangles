@@ -28,6 +28,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/inquirer": "^7.3.1",
     "@types/jest": "^26.0.14",
     "@types/node": "^12.7.2",
     "@typescript-eslint/eslint-plugin": "^2.21.0",
@@ -46,7 +47,9 @@
   },
   "dependencies": {
     "eslint-plugin-jest": "^24.1.0",
+    "inquirer": "^8.1.1",
     "jest": "^26.5.3",
+    "prompt-sync": "^4.2.0",
     "ts-jest": "^26.4.1"
   }
 }

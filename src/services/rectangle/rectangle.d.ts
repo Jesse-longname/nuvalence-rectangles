@@ -19,7 +19,7 @@ export interface LineSegment {
   endPoint: Point;
 }
 
-export interface RectangleCompaerer {
+export interface RectangleComparer {
   /**
    * Returns the points at which the two rectangles intersect.
    * @param  {Rectangle} rectangleA
