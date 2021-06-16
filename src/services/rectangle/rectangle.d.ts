@@ -10,6 +10,15 @@ export interface Rectangle {
   y2: number;
 }
 
+// Defines a line segment by storing endpoints, and the eq. of the line in Ax + By = C format
+export interface LineSegment {
+  A: number;
+  B: number;
+  C: number;
+  startPoint: Point;
+  endPoint: Point;
+}
+
 export interface RectangleCompaerer {
   /**
    * Returns the points at which the two rectangles intersect.

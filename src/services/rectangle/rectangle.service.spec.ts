@@ -1,8 +1,9 @@
+import { RectangleCompaerer } from './rectangle';
 import { RectangleService } from './rectangle.service';
 import { testCases } from './rectangle.testcases';
 
 describe('Rectangle Service Tests', () => {
-  const rectangleService = new RectangleService();
+  const rectangleService: RectangleCompaerer = new RectangleService();
 
   it('should be initialized', () => {
     expect(rectangleService).toBeDefined();
@@ -11,29 +12,29 @@ describe('Rectangle Service Tests', () => {
   describe('predefined testcases', () => {
     testCases.forEach(testCase => {
       describe(testCase.description, () => {
-        it(`should ${testCase.shouldThrowError ? '' : 'not '}error`, () => {
-          if (testCase.shouldThrowError) {
-            expect(
+        if (testCase.shouldThrowError) {
+          it(`should error`, () => {
+            expect(() =>
               rectangleService.getIntersections(
                 testCase.rectangleA,
                 testCase.rectangleB,
               ),
             ).toThrowError();
-          } else {
-            expect(
-              rectangleService.getIntersections(
-                testCase.rectangleA,
-                testCase.rectangleB,
-              ),
-            ).not.toThrowError();
-          }
-        });
+          });
+          return;
+        }
 
         it('should have correct intersections', () => {
           expect(
             rectangleService.getIntersections(
               testCase.rectangleA,
               testCase.rectangleB,
+            ),
+          ).toEqual(testCase.intersections);
+          expect(
+            rectangleService.getIntersections(
+              testCase.rectangleB,
+              testCase.rectangleA,
             ),
           ).toEqual(testCase.intersections);
         });
