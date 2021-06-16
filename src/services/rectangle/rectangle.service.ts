@@ -1,62 +1,26 @@
-import { Line, Point, Rectangle, RectangleCompaerer } from './rectangle';
+import { Point, Rectangle, RectangleCompaerer, LineSegment } from './rectangle';
 
 export class RectangleService implements RectangleCompaerer {
   getIntersections(rectangleA: Rectangle, rectangleB: Rectangle): Point[] {
     rectangleA = this.sanitizeRectangle(rectangleA);
     rectangleB = this.sanitizeRectangle(rectangleB);
 
-    const aLines = this.createLines(rectangleA);
-    const bLines = this.createLines(rectangleB);
+    const lineSegmentsA = this.createLineSegments(rectangleA);
+    const lineSegmentsB = this.createLineSegments(rectangleB);
 
     let points: Point[] = [];
 
-    for (const aLine of aLines) {
-      for (const bLine of bLines) {
-        // do these two overlap?
-        const A1 = aLine.y2 - aLine.y1;
-        const A2 = bLine.y2 - bLine.y1;
-        const B1 = aLine.x1 - aLine.x2;
-        const B2 = bLine.x1 - bLine.x2;
-
-        const det = A1 * B2 - A2 * B1;
-        if (det === 0) {
-          // lines are parallel, we can ignore (they will be handled by the perpendicular counterpart)
-        } else {
-          const C1 = A1 * aLine.x1 + B1 * aLine.y1;
-          const C2 = A2 * bLine.x1 + B2 * bLine.y1;
-
-          let x = (B2 * C1 - B1 * C2) / det;
-          let y = (A1 * C2 - A2 * C1) / det;
-
-          if (x === 0) x = 0;
-          if (y === 0) y = 0;
-
-          if (
-            this.isBetweenInclusive(x, aLine.x1, aLine.x2) &&
-            this.isBetweenInclusive(y, aLine.y1, aLine.y2) &&
-            this.isBetweenInclusive(x, bLine.x1, bLine.x2) &&
-            this.isBetweenInclusive(y, bLine.y1, bLine.y2)
-          ) {
-            points.push({ x, y });
-          }
+    lineSegmentsA.forEach(segmentA => {
+      lineSegmentsB.forEach(segmentB => {
+        const point = this.getIntersectingPoint(segmentA, segmentB);
+        if (point) {
+          points.push(point);
         }
-      }
-    }
-
-    points = points.sort((a, b) => {
-      if (a.x === b.x) {
-        return a.y - b.y;
-      }
-      return a.x - b.x;
+      });
     });
 
-    for (let i = 0; i < points.length - 1; i++) {
-      const curr = points[i];
-      const next = points[i + 1];
-      if (curr.x === next.x && curr.y === next.y) {
-        points.splice(i + 1, 1);
-      }
-    }
+    points = this.sortPoints(points);
+    this.removeDuplicates(points);
 
     return points;
   }
@@ -124,15 +88,6 @@ export class RectangleService implements RectangleCompaerer {
     return rect.x1 === rect.x2 || rect.y1 === rect.y2;
   }
 
-  private anyMatch(numbers: number[]): boolean {
-    const lazyMap: { [num: number]: boolean } = {};
-    for (const num in numbers) {
-      if (lazyMap[num]) return true;
-      lazyMap[num] = true;
-    }
-    return false;
-  }
-
   private isBetweenInclusive(
     toCheck: number,
     lowerEndpoint: number,
@@ -141,35 +96,92 @@ export class RectangleService implements RectangleCompaerer {
     return toCheck >= lowerEndpoint && toCheck <= higherEndpoint;
   }
 
-  createLines(rect: Rectangle): Line[] {
-    const { x1, x2, y1, y2 } = rect;
+  private createLineSegments(rect: Rectangle): LineSegment[] {
+    const lineSegments: LineSegment[] = [];
+    const xs = [rect.x1, rect.x2];
+    const ys = [rect.y1, rect.y2];
 
-    const lines: Line[] = [];
-    lines.push({
-      x1: x1,
-      y1: y1,
-      x2: x1,
-      y2: y2,
-    });
-    lines.push({
-      x1: x1,
-      y1: y1,
-      x2: x2,
-      y2: y1,
-    });
-    lines.push({
-      x1: x1,
-      y1: y2,
-      x2: x2,
-      y2: y2,
-    });
-    lines.push({
-      x1: x2,
-      y1: y1,
-      x2: x2,
-      y2: y2,
-    });
+    for (let i = 0; i < 4; i++) {
+      const x1 = xs[Math.floor(i / 2)];
+      const y1 = ys[Math.floor(i / 2)];
+      const x2 = xs[i % 2];
+      const y2 = ys[(i + 1) % 2];
 
-    return lines;
+      // linear algebra to find constants defining this line
+      const A = y2 - y1;
+      const B = x1 - x2;
+      const C = A * x1 + B * y1;
+      const lineSegment: LineSegment = {
+        startPoint: { x: x1, y: y1 },
+        endPoint: { x: x2, y: y2 },
+        A,
+        B,
+        C,
+      };
+      lineSegments.push(lineSegment);
+    }
+
+    return lineSegments;
+  }
+
+  private getIntersectingPoint(
+    line1: LineSegment,
+    line2: LineSegment,
+  ): Point | undefined {
+    const { A: A1, B: B1, C: C1 } = line1;
+    const { A: A2, B: B2, C: C2 } = line2;
+
+    const det = A1 * B2 - A2 * B1;
+
+    if (det != 0) {
+      let x = (B2 * C1 - B1 * C2) / det;
+      let y = (A1 * C2 - A2 * C1) / det;
+
+      // Convert -0 to 0
+      if (x === 0) x = 0;
+      if (y === 0) y = 0;
+
+      const point: Point = { x, y };
+
+      if (
+        this.pointIsOnSegment(point, line1) &&
+        this.pointIsOnSegment(point, line2)
+      ) {
+        return point;
+      }
+    }
+  }
+
+  private pointIsOnSegment(point: Point, lineSegment: LineSegment): boolean {
+    const { x: startX, y: startY } = lineSegment.startPoint;
+    const { x: endX, y: endY } = lineSegment.endPoint;
+    const minX = Math.min(startX, endX);
+    const maxX = Math.max(startX, endX);
+    const minY = Math.min(startY, endY);
+    const maxY = Math.max(startY, endY);
+
+    return (
+      this.isBetweenInclusive(point.x, minX, maxX) &&
+      this.isBetweenInclusive(point.y, minY, maxY)
+    );
+  }
+
+  private sortPoints(points: Point[]): Point[] {
+    return points.sort((a, b) => {
+      if (a.x === b.x) {
+        return a.y - b.y;
+      }
+      return a.x - b.x;
+    });
+  }
+
+  private removeDuplicates(points: Point[]): void {
+    for (let i = 0; i < points.length - 1; i++) {
+      const curr = points[i];
+      const next = points[i + 1];
+      if (curr.x === next.x && curr.y === next.y) {
+        points.splice(i + 1, 1);
+      }
+    }
   }
 }
