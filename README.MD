@@ -1,32 +1,26 @@
 # Nuvalence Rectangles Problem
 
-## Problem Description:
-You are required to write code in the language of your choice implementing certain algorithms that
-analyze rectangles and features that exist among rectangles. Your implementation is required to cover
-the following:
-1. Intersection: You must be able to determine whether two rectangles have one or more
-intersecting lines and produce a result identifying the points of intersection. For your
-convenience, the scenario is diagrammed in Appendix 1.
-2. Containment: You must be able to determine whether a rectangle is wholly contained within
-another rectangle. For your convenience, the scenario is diagrammed in Appendix 2.
-3. Adjacency: Implement the ability to detect whether two rectangles are adjacent. Adjacency is
-defined as the sharing of at least one side. Side sharing may be proper, sub-line or partial. A
-sub-line share is a share where one side of rectangle A is a line that exists as a set of points
-wholly contained on some other side of rectangle B, where partial is one where some line
-segment on a side of rectangle A exists as a set of points on some side of Rectangle B. For your
-convenience, these scenarios are diagrammed in Appendix 3 (see PDF).
+## Requirements
+- Node v14.15.0 or above
+  - **Note**: May work with versions below this, but I have not tested that.
 
+## How to Run
+There is a simple harness that will allow you to run the code with either custom test cases, or some sample test cases. You can run it by using the command `npm run start`.
 
-## Submission Requirements:
-1. An implementation of the rectangle entity as well as implementations for the algorithms that
-define the operations listed above.
-2. Appropriate documentation
-3. Test cases/unit tests
-Feel free to expand on this problem as you wish. Document any expansion and provide it as part of your
-submission.
+You can also run the tests by using `npm run test`. 
 
-Your submitted source code must compile (if necessary) and the resulting executable must run on Linux.
-Please document any library or framework dependencies.
+## Files of interest
+The two main files of interest are 
+1. `src/services/rectangle/rectangle.service.ts` 
+  - This contains all of the logic to accomplish the desired tasks
+2. `src/services/rectangle/rectangle.testcases.ts`
+  - This contains all of the test cases that I created. It should cover most of the edge cases.
+
+## Special Notes
+- I only had 1 evening to work on this, so it is still pretty raw. See `PLAN.MD` to take a look at a very rough master plan of where this project could go. This was created when I first started working on this, and wasn't modified too much afterwards. 
+- Sometimes the requirements weren't explicit, or could be interpreted in multiple ways. Since there was no PM to talk to, I had to make some assumptions. Those assumptions are recorded in `ASSUMPTIONS.MD`.
+- I used a started template for this project. You can find the starter template [here](https://github.com/stemmlerjs/simple-typescript-starter)
+
 
 ## Assumptions
 - The input to the service will be a pair of Rectangles (as opposed to a pair of lists of Lines)

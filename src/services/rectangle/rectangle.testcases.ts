@@ -33,12 +33,7 @@ function createTestCase(
   };
 }
 
-function createRectangle(
-  x1: number,
-  y1: number,
-  x2: number,
-  y2: number,
-): Rectangle {
+function createRectangle(x1: number, y1: number, x2: number, y2: number): Rectangle {
   return {
     x1,
     y1,

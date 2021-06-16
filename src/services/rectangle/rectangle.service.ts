@@ -1,6 +1,6 @@
-import { Point, Rectangle, RectangleCompaerer, LineSegment } from './rectangle';
+import { Point, Rectangle, RectangleComparer, LineSegment } from './rectangle';
 
-export class RectangleService implements RectangleCompaerer {
+export class RectangleService implements RectangleComparer {
   getIntersections(rectangleA: Rectangle, rectangleB: Rectangle): Point[] {
     rectangleA = this.sanitizeRectangle(rectangleA);
     rectangleB = this.sanitizeRectangle(rectangleB);
@@ -29,20 +29,14 @@ export class RectangleService implements RectangleCompaerer {
     container = this.sanitizeRectangle(container);
     containee = this.sanitizeRectangle(containee);
 
-    const containeeBetweenContainerX =
-      containee.x1 >= container.x1 && containee.x2 <= container.x2;
-    const containeeBetweenContainerY =
-      containee.y1 >= container.y1 && containee.y2 <= container.y2;
+    const containeeBetweenContainerX = containee.x1 >= container.x1 && containee.x2 <= container.x2;
+    const containeeBetweenContainerY = containee.y1 >= container.y1 && containee.y2 <= container.y2;
     return containeeBetweenContainerX && containeeBetweenContainerY;
   }
 
   isAdjacent(rectangleA: Rectangle, rectangleB: Rectangle): boolean {
-    const { x1: ax1, x2: ax2, y1: ay1, y2: ay2 } = this.sanitizeRectangle(
-      rectangleA,
-    );
-    const { x1: bx1, x2: bx2, y1: by1, y2: by2 } = this.sanitizeRectangle(
-      rectangleB,
-    );
+    const { x1: ax1, x2: ax2, y1: ay1, y2: ay2 } = this.sanitizeRectangle(rectangleA);
+    const { x1: bx1, x2: bx2, y1: by1, y2: by2 } = this.sanitizeRectangle(rectangleB);
 
     // If they have a matching edge on the x axis
     if (ax1 === bx1 || ax2 === bx1 || ax1 === bx2 || ax2 === bx2) {
@@ -124,10 +118,7 @@ export class RectangleService implements RectangleCompaerer {
     return lineSegments;
   }
 
-  private getIntersectingPoint(
-    line1: LineSegment,
-    line2: LineSegment,
-  ): Point | undefined {
+  private getIntersectingPoint(line1: LineSegment, line2: LineSegment): Point | undefined {
     const { A: A1, B: B1, C: C1 } = line1;
     const { A: A2, B: B2, C: C2 } = line2;
 
@@ -143,10 +134,7 @@ export class RectangleService implements RectangleCompaerer {
 
       const point: Point = { x, y };
 
-      if (
-        this.pointIsOnSegment(point, line1) &&
-        this.pointIsOnSegment(point, line2)
-      ) {
+      if (this.pointIsOnSegment(point, line1) && this.pointIsOnSegment(point, line2)) {
         return point;
       }
     }
@@ -161,8 +149,7 @@ export class RectangleService implements RectangleCompaerer {
     const maxY = Math.max(startY, endY);
 
     return (
-      this.isBetweenInclusive(point.x, minX, maxX) &&
-      this.isBetweenInclusive(point.y, minY, maxY)
+      this.isBetweenInclusive(point.x, minX, maxX) && this.isBetweenInclusive(point.y, minY, maxY)
     );
   }
 
