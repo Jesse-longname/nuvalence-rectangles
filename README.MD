@@ -41,13 +41,12 @@ Please document any library or framework dependencies.
 - If two rectangles meet at a single point (i.e. Corners touching), this will be considered adjacent.
   - Technically, this means that our adjacency check will be inclusive of the endpoints, which I think is fine. 
   - If it needs to be changed, it will be simple.
-- A contained rectangle can share at most two edges with it's containee. Otherwise, it is adjacent
-  - Just calling this out as an edge case, and defining where I stand on the matter.
-- A pair of rectangles can only fall in 1 of the three categories
-  - This may be incorrect from reading the "Intersection" description, but it is the assumption I am going with. If only one line of rectangle A is intersecting with one line of rectangle B, that means they have some sort of adjacency. 
-  - Might need to add a priority of classifications.
-- Shared edges will not count as an intersection
-  - Otherwise, there are infinite intersection points
+- Containment will be inclusive. So it will be possible for a rectangle to be both adjacent and contained.
+  - This also means that two rectangles could contain each other. That doesn't sound right, but this is the simplest approach. Otherwise, there would have to be a special check for if the rectangles are equal.
+- Endpoints of a line on a shared edge will count as an intersection
+  - The whole line will not count as an intersection, because that would be infinite intersections
+- A point or line is not considered a rectangle
+  - Mostly making this decision so we can showcase throwing errors
 
 ## Code Sources
 I used a starter project to speed up development. This has typescript and jest support pre-configured. Initial starter project was from this repo: https://github.com/stemmlerjs/simple-typescript-starter
