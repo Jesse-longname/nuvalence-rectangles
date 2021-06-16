@@ -11,23 +11,17 @@ describe('Rectangle Service Tests', () => {
   describe('predefined testcases', () => {
     testCases.forEach(testCase => {
       describe(testCase.description, () => {
-        it(`should ${testCase.shouldThrowError ? '' : 'not '}error`, () => {
-          if (testCase.shouldThrowError) {
+        if (testCase.shouldThrowError) {
+          it(`should error`, () => {
             expect(
               rectangleService.getIntersections(
                 testCase.rectangleA,
                 testCase.rectangleB,
               ),
             ).toThrowError();
-          } else {
-            expect(
-              rectangleService.getIntersections(
-                testCase.rectangleA,
-                testCase.rectangleB,
-              ),
-            ).not.toThrowError();
-          }
-        });
+          });
+          return;
+        }
 
         it('should have correct intersections', () => {
           expect(

@@ -6,11 +6,18 @@ export class RectangleService implements RectangleCompaerer {
     rectangleB = this.sanitizeRectangle(rectangleB);
     return [];
   }
+
   isContained(container: Rectangle, containee: Rectangle): boolean {
     container = this.sanitizeRectangle(container);
     containee = this.sanitizeRectangle(containee);
-    return false;
+
+    const containeeBetweenContainerX =
+      containee.x1 >= container.x1 && containee.x2 <= container.x2;
+    const containeeBetweenContainerY =
+      containee.y1 >= container.y1 && containee.y2 <= container.y2;
+    return containeeBetweenContainerX && containeeBetweenContainerY;
   }
+
   isAdjacent(rectangleA: Rectangle, rectangleB: Rectangle): boolean {
     const { x1: ax1, x2: ax2, y1: ay1, y2: ay2 } = this.sanitizeRectangle(
       rectangleA,
