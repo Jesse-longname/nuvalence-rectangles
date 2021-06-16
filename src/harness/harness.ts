@@ -80,12 +80,8 @@ export class Harness {
 
       console.log('Intersections: ', intersections);
       console.log(`Are the rectangles adjacent? ${isAdjacent ? 'yes' : 'no'}`);
-      console.log(
-        `Does the first rectangle contain the second? ${firstContainsSecond ? 'yes' : 'no'}`,
-      );
-      console.log(
-        `Does the second rectangle contain the first? ${secondContainsFirst ? 'yes' : 'no'}`,
-      );
+      console.log(`Does the first rectangle contain the second? ${firstContainsSecond ? 'yes' : 'no'}`);
+      console.log(`Does the second rectangle contain the first? ${secondContainsFirst ? 'yes' : 'no'}`);
     } catch (err) {
       console.log(err.message);
     }
@@ -127,7 +123,7 @@ export class Harness {
   async existingFlow(): Promise<void> {
     const testCaseChoices = testCases.map((x: TestCase) => {
       return {
-        name: x.description,
+        name: `${x.description}: ${this.getStringRep(x.rectangleA)} ${this.getStringRep(x.rectangleB)}`,
         value: x,
       };
     });
@@ -141,6 +137,9 @@ export class Harness {
     ]);
     const rectA = answer.testCaseSelection.rectangleA;
     const rectB = answer.testCaseSelection.rectangleB;
+    console.log('Running with the following values:');
+    console.log('First rectangle: ', rectA);
+    console.log('Second rectangle: ', rectB);
     await this.logResultsAndRestart(rectA, rectB);
   }
 
@@ -158,5 +157,9 @@ export class Harness {
         console.log('Thanks!');
         return;
     }
+  }
+
+  getStringRep(rect: Rectangle): string {
+    return `[(${rect.x1}, ${rect.y1}), (${rect.x2}, ${rect.y2})]`;
   }
 }
