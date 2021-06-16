@@ -1,10 +1,64 @@
-import { Point, Rectangle, RectangleCompaerer } from './rectangle';
+import { Line, Point, Rectangle, RectangleCompaerer } from './rectangle';
 
 export class RectangleService implements RectangleCompaerer {
   getIntersections(rectangleA: Rectangle, rectangleB: Rectangle): Point[] {
     rectangleA = this.sanitizeRectangle(rectangleA);
     rectangleB = this.sanitizeRectangle(rectangleB);
-    return [];
+
+    const aLines = this.createLines(rectangleA);
+    const bLines = this.createLines(rectangleB);
+
+    let points: Point[] = [];
+
+    for (const aLine of aLines) {
+      for (const bLine of bLines) {
+        // do these two overlap?
+        const A1 = aLine.y2 - aLine.y1;
+        const A2 = bLine.y2 - bLine.y1;
+        const B1 = aLine.x1 - aLine.x2;
+        const B2 = bLine.x1 - bLine.x2;
+
+        const det = A1 * B2 - A2 * B1;
+        if (det === 0) {
+          // lines are parallel, we can ignore (they will be handled by the perpendicular counterpart)
+        } else {
+          const C1 = A1 * aLine.x1 + B1 * aLine.y1;
+          const C2 = A2 * bLine.x1 + B2 * bLine.y1;
+
+          let x = (B2 * C1 - B1 * C2) / det;
+          let y = (A1 * C2 - A2 * C1) / det;
+
+          if (x === 0) x = 0;
+          if (y === 0) y = 0;
+
+          if (
+            this.isBetweenInclusive(x, aLine.x1, aLine.x2) &&
+            this.isBetweenInclusive(y, aLine.y1, aLine.y2) &&
+            this.isBetweenInclusive(x, bLine.x1, bLine.x2) &&
+            this.isBetweenInclusive(y, bLine.y1, bLine.y2)
+          ) {
+            points.push({ x, y });
+          }
+        }
+      }
+    }
+
+    points = points.sort((a, b) => {
+      if (a.x === b.x) {
+        return a.y - b.y;
+      }
+      return a.x - b.x;
+    });
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const curr = points[i];
+      const next = points[i + 1];
+      if (curr.x === next.x && curr.y === next.y) {
+        points.splice(i + 1, 1);
+      }
+    }
+
+    return points;
   }
 
   isContained(container: Rectangle, containee: Rectangle): boolean {
@@ -77,5 +131,45 @@ export class RectangleService implements RectangleCompaerer {
       lazyMap[num] = true;
     }
     return false;
+  }
+
+  private isBetweenInclusive(
+    toCheck: number,
+    lowerEndpoint: number,
+    higherEndpoint: number,
+  ): boolean {
+    return toCheck >= lowerEndpoint && toCheck <= higherEndpoint;
+  }
+
+  createLines(rect: Rectangle): Line[] {
+    const { x1, x2, y1, y2 } = rect;
+
+    const lines: Line[] = [];
+    lines.push({
+      x1: x1,
+      y1: y1,
+      x2: x1,
+      y2: y2,
+    });
+    lines.push({
+      x1: x1,
+      y1: y1,
+      x2: x2,
+      y2: y1,
+    });
+    lines.push({
+      x1: x1,
+      y1: y2,
+      x2: x2,
+      y2: y2,
+    });
+    lines.push({
+      x1: x2,
+      y1: y1,
+      x2: x2,
+      y2: y2,
+    });
+
+    return lines;
   }
 }
